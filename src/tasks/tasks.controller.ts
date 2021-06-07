@@ -10,6 +10,7 @@ import {
 } from '@nestjs/common';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { GetTasksFilterDto } from './dto/get-tasks-filter';
+import { UpdateTaskStatusDto } from './dto/update-task-status.dto';
 import { Task, TaskStatus } from './task.model';
 import { TasksService } from './tasks.service';
 
@@ -21,6 +22,7 @@ export class TasksController {
   getTasks(@Query() filterDto: GetTasksFilterDto): Task[] {
     // se ho filtri li applico se no recupero tutto
     if(Object.keys(filterDto).length){
+
       return this.tasksService.getTasksWithFilters(filterDto)
     } else {
       return this.tasksService.getAllTasks();
@@ -44,7 +46,8 @@ export class TasksController {
   }
 
   @Patch('/:id/status')
-  updateTaskStatus(@Param('id') id: string, @Body('status') status: TaskStatus): Task {
+  updateTaskStatus(@Param('id') id: string, @Body() updatedTaskStatusDto: UpdateTaskStatusDto): Task {
+    const {status} = updatedTaskStatusDto
     return this.tasksService.updateTaskStatus(id, status);
   }
 }
